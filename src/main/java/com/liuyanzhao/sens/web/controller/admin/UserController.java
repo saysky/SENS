@@ -10,10 +10,7 @@ import com.liuyanzhao.sens.config.shiro.UserToken;
 import com.liuyanzhao.sens.model.enums.LogTypeEnum;
 import com.liuyanzhao.sens.model.enums.LoginTypeEnum;
 import com.liuyanzhao.sens.model.enums.ResultCodeEnum;
-import com.liuyanzhao.sens.service.PostService;
-import com.liuyanzhao.sens.service.RoleService;
-import com.liuyanzhao.sens.service.UserRoleRefService;
-import com.liuyanzhao.sens.service.UserService;
+import com.liuyanzhao.sens.service.*;
 import com.liuyanzhao.sens.utils.LocaleMessageUtil;
 import com.liuyanzhao.sens.utils.Md5Util;
 import com.liuyanzhao.sens.utils.PageUtil;
@@ -28,6 +25,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * <pre>
@@ -53,6 +51,9 @@ public class UserController extends BaseController {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private PermissionService permissionService;
 
     @Autowired
     private LocaleMessageUtil localeMessageUtil;
@@ -222,6 +223,9 @@ public class UserController extends BaseController {
         // freeRealm 无需验证账号密码
         UserToken userToken = new UserToken(user.getUserName(), null, LoginTypeEnum.FREE.getValue());
         subject.login(userToken);
+
+        Set<String> permissionUrls = permissionService.findPermissionUrlsByUserId(user.getId());
+        subject.getSession().setAttribute("permissionUrls", permissionUrls);
         return "redirect:/admin";
     }
 
@@ -253,8 +257,7 @@ public class UserController extends BaseController {
                                       @ModelAttribute("newPass") String newPass) {
         User user = userService.get(userId);
         if (null != user) {
-            String password = Md5Util.toMd5(newPass, "sens", 10);
-            userService.updatePassword(user.getId(), password);
+            userService.updatePassword(user.getId(), newPass);
         }
         return new JsonResult(ResultCodeEnum.SUCCESS.getCode(), localeMessageUtil.getMessage("code.admin.user.update-password-success"));
     }

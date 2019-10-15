@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.Set;
 
 
 /**
@@ -44,11 +45,10 @@ public class FrontOAuthController extends BaseController {
     private ThirdAppBindService thirdAppBindService;
 
     @Autowired
-    private LogService logService;
-
-    @Autowired
     private LocaleMessageUtil localeMessageUtil;
 
+    @Autowired
+    private PermissionService permissionService;
     /**
      * 第三方授权后会回调此方法，并将code传过来
      *
@@ -74,6 +74,9 @@ public class FrontOAuthController extends BaseController {
                         UserToken userToken = new UserToken(user.getUserName(), user.getUserPass(), LoginTypeEnum.FREE.getValue());
                         try {
                             subject.login(userToken);
+
+                            Set<String> permissionUrls = permissionService.findPermissionUrlsByUserId(user.getId());
+                            subject.getSession().setAttribute("permissionUrls", permissionUrls);
                         } catch (LockedAccountException e) {
                             e.printStackTrace();
                             log.error("第三方登录(QQ)免密码登录失败, 账号被锁定, cause:{}", e.getMessage());
@@ -135,6 +138,9 @@ public class FrontOAuthController extends BaseController {
                         UserToken userToken = new UserToken(user.getUserName(), user.getUserPass(), LoginTypeEnum.FREE.getValue());
                         try {
                             subject.login(userToken);
+
+                            Set<String> permissionUrls = permissionService.findPermissionUrlsByUserId(user.getId());
+                            subject.getSession().setAttribute("permissionUrls", permissionUrls);
                         } catch (Exception e) {
                             e.printStackTrace();
                             log.error("第三方登录(GitHub)免密码登录失败, cause:{}", e);

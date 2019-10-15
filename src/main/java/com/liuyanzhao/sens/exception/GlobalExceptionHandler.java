@@ -233,8 +233,7 @@ public class GlobalExceptionHandler {
             MappingJackson2JsonView view = new MappingJackson2JsonView();
             Map<String, Object> attributes = new HashMap<String, Object>();
             if (e instanceof UnauthorizedException) {
-                String msg = localeMessageUtil.getMessage("code.admin.common.permission-denied");
-                attributes.put("msg", msg);
+                attributes.put("msg", "没有权限");
             } else {
                 attributes.put("msg", e.getMessage());
             }

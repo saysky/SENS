@@ -80,7 +80,6 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setId(userId);
         user.setUserPass(Md5Util.toMd5(password, "sens", 10));
-        user.setUserPass(new Md5Hash(password, "sens", 10).toString());
         userMapper.updateById(user);
         redisUtil.del(RedisKeys.USER + userId);
 
@@ -208,6 +207,11 @@ public class UserServiceImpl implements UserService {
         basicUserCheck(user);
         //2.验证用户名和邮箱是否存在
         checkUserNameAndUserName(user);
+
+        if(user.getUserPass() != null) {
+            String userPass = Md5Util.toMd5(user.getUserPass(), "sens", 10);
+            user.setUserPass(userPass);
+        }
         userMapper.updateById(user);
         redisUtil.del(RedisKeys.USER + user.getId());
         return user;
