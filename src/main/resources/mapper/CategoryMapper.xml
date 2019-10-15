@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liuyanzhao.sens.mapper.CategoryMapper">
+
+    <delete id="deleteByUserId">
+       DELETE
+       FROM
+           sens_category
+       WHERE
+           user_id = #{value}
+    </delete>
+
+    <select id="findAllWithCount" resultType="com.liuyanzhao.sens.entity.Category">
+        SELECT
+            t.id,
+            t.user_id,
+            t.cate_name,
+            t.cate_pid,
+            t.cate_sort,
+            t.cate_level,
+            t.path_trace,
+            t.cate_desc,
+            ( SELECT count( * ) FROM sens_post_category_ref r WHERE r.cate_id = t.id ) AS `count`,
+            t.create_time
+        FROM
+            sens_category t
+        ORDER BY
+            t.cate_sort DESC
+    </select>
+
+    <select id="findByUserIdWithCount" resultType="com.liuyanzhao.sens.entity.Category">
+        SELECT
+            t.id,
+            t.cate_name,
+            t.cate_pid,
+            t.cate_sort,
+            t.cate_level,
+            t.path_trace,
+            t.cate_desc,
+            ( SELECT count( * ) FROM sens_post_category_ref r WHERE r.cate_id = t.id ) AS `count`,
+            t.create_time
+        FROM
+            sens_category t
+        WHERE
+            t.user_id = #{userId}
+        ORDER BY
+            t.cate_sort DESC
+    </select>
+
+    <select id="findByPostId" resultType="com.liuyanzhao.sens.entity.Category">
+        SELECT
+            t.id,
+            t.cate_name,
+            t.cate_pid,
+            t.cate_sort,
+            t.cate_level,
+            t.path_trace,
+            t.cate_desc,
+            t.create_time
+        FROM
+            sens_category t,
+            sens_post_category_ref r
+        WHERE
+            r.post_id = #{postId} AND
+            r.cate_id = t.id
+    </select>
+
+    <select id="selectChildCateIds" resultType="java.lang.Long">
+        SELECT
+            id
+        FROM
+            sens_category
+        WHERE
+            path_trace LIKE CONCAT('%', #{pathTrace}, '%')
+    </select>
+
+    <select id="getTodayCount" resultType="java.lang.Integer">
+        SELECT
+            count( * )
+        FROM
+            sens_post
+        WHERE
+            to_days( create_time ) = to_days( now( ) );
+    </select>
+
+</mapper>

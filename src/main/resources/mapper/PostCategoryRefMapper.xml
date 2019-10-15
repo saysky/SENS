@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liuyanzhao.sens.mapper.PostCategoryRefMapper">
+
+
+    <delete id="deleteByPostId">
+      DELETE
+      FROM
+          sens_post_category_ref
+      WHERE
+          post_id = #{value}
+  </delete>
+
+    <delete id="deleteByCateId">
+      DELETE
+      FROM
+          sens_post_category_ref
+      WHERE
+          cate_id = #{value}
+  </delete>
+
+    <select id="selectPostIdByCateId" resultType="java.lang.Long">
+      SELECT
+           post_id
+      FROM
+           sens_post_category_ref
+      WHERE
+           cate_id = #{value}
+  </select>
+
+    <select id="selectCateIdByPostId" resultType="java.lang.Long">
+       SELECT
+            cate_id
+       FROM
+            sens_post_category_ref
+       WHERE
+            post_id = #{value}
+  </select>
+
+    <select id="countPostByCateId" resultType="java.lang.Integer">
+      SELECT
+          count( * )
+      FROM
+          sens_post_category_ref
+      WHERE
+          cate_id = #{value}
+  </select>
+
+</mapper>

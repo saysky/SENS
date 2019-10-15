@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liuyanzhao.sens.mapper.MailRetrieveMapper">
+
+  <select id="findLatestByUserId" resultType="com.liuyanzhao.sens.entity.MailRetrieve">
+    SELECT
+      id,
+      user_id,
+      email,
+      code,
+      create_time,
+      out_time
+    FROM
+        sens_mail_retrieve
+    WHERE
+        user_id = #{value}
+    ORDER BY create_time DESC
+        LIMIT 1
+  </select>
+
+
+  <select id="findLatestByEmail" resultType="com.liuyanzhao.sens.entity.MailRetrieve">
+    SELECT
+        id,
+        user_id,
+        email,
+        CODE,
+        create_time,
+        out_time
+    FROM
+        sens_mail_retrieve
+    WHERE
+        email = #{value}
+    ORDER BY create_time DESC
+        LIMIT 1
+  </select>
+
+    <select id="getTodayCount" resultType="java.lang.Integer">
+        SELECT
+            count( * )
+        FROM
+            sens_post
+        WHERE
+            to_days( create_time ) = to_days( now( ) );
+    </select>
+</mapper>

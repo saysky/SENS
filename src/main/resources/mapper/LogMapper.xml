@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liuyanzhao.sens.mapper.LogMapper">
+
+    <select id="findLatestLog" resultType="com.liuyanzhao.sens.entity.Log">
+        SELECT
+            id,
+            username,
+            log_type,
+            request_url,
+            request_type,
+            request_param,
+            name,
+            ip,
+            create_time
+        FROM
+            sens_log
+        ORDER BY
+            create_time DESC
+            LIMIT #{value}
+  </select>
+
+    <select id="findLatestLogByLogTypes" resultType="com.liuyanzhao.sens.entity.Log">
+        SELECT
+            id,
+            username,
+            log_type,
+            request_url,
+            request_type,
+            request_param,
+            name,
+            ip,
+            create_time
+        FROM
+            sens_log
+        WHERE
+            log_type IN
+            <foreach collection="logTypes" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        ORDER BY
+            create_time DESC
+            LIMIT #{limit}
+  </select>
+
+    <delete id="deleteAll">
+        DELETE
+        FROM
+            sens_log
+    </delete>
+
+    <select id="getTodayCount" resultType="java.lang.Integer">
+        SELECT
+            count( * )
+        FROM
+            sens_post
+        WHERE
+            to_days( create_time ) = to_days( now( ) );
+    </select>
+
+    <select id="findLatestLogByUserId" resultType="com.liuyanzhao.sens.entity.Log">
+        SELECT
+          id,
+            username,
+            log_type,
+            request_url,
+            request_type,
+            request_param,
+            name,
+            ip,
+            create_time
+        FROM
+            sens_log
+        WHERE
+            user_id = #{userId}
+        ORDER BY
+            create_time DESC
+            LIMIT #{limit}
+    </select>
+
+
+</mapper>

@@ -1,0 +1,14 @@
+${AnsiColor.BRIGHT_CYAN}
+
+
+         .M"""bgd `7MM"""YMM  `7MN.   `7MF'.M"""bgd
+        ,MI    "Y   MM    `7    MMN.    M ,MI    "Y
+        `MMb.       MM   d      M YMb   M `MMb.
+          `YMMNq.   MMmmMM      M  `MN. M   `YMMNq.
+        .     `MM   MM   Y  ,   M   `MM.M .     `MM
+        Mb     dM   MM     ,M   M     YMM Mb     dM
+        P"Ybmmd"  .JMMmmmmMMM .JML.    YM P"Ybmmd"
+
+
+ ${AnsiColor.BRIGHT_YELLOW}
+ ::: Spring-Boot ${spring-boot.version}     ::: SENS Blog (version:${application.formatted-version})

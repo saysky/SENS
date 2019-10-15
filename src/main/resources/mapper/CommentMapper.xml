@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liuyanzhao.sens.mapper.CommentMapper">
+    <select id="findLatestCommentByLimit" resultType="com.liuyanzhao.sens.entity.Comment">
+        SELECT
+            id,
+            post_id,
+            comment_author,
+            comment_author_email,
+            comment_author_url,
+            comment_author_ip,
+            comment_author_email_md5,
+            comment_author_avatar,
+            comment_content,
+            comment_agent,
+            comment_parent,
+            comment_status,
+            comment_type,
+            is_admin,
+            user_id,
+            path_trace,
+            accept_user_id,
+            create_time
+        FROM
+            sens_comment
+        WHERE
+            comment_status = 0
+            AND is_admin = 0
+        ORDER BY
+            create_time DESC
+            LIMIT #{limit}
+    </select>
+
+    <delete id="deleteByUserId">
+       DELETE
+       FROM
+           sens_comment
+       WHERE
+           user_id = #{value}
+    </delete>
+
+    <delete id="deleteByAcceptUserId">
+       DELETE
+       FROM
+           sens_comment
+       WHERE
+           accept_user_id = #{value}
+    </delete>
+
+    <select id="getLatestCommentByIP" resultType="com.liuyanzhao.sens.entity.Comment">
+        SELECT
+            id,
+            post_id,
+            comment_author,
+            comment_author_email,
+            comment_author_url,
+            comment_author_ip,
+            comment_author_email_md5,
+            comment_author_avatar,
+            comment_content,
+            comment_agent,
+            comment_parent,
+            comment_status,
+            comment_type,
+            is_admin,
+            user_id,
+            path_trace,
+            accept_user_id,
+            create_time
+        FROM
+            sens_comment
+        WHERE
+            comment_author_ip = #{value}
+        ORDER BY
+            id DESC
+            LIMIT 1
+    </select>
+
+
+    <select id="selectChildCommentIds" resultType="java.lang.Long">
+        SELECT
+            id
+        FROM
+            sens_comment
+        WHERE
+            path_trace LIKE CONCAT('%',#{pathTrace},'%')
+    </select>
+
+    <select id="getTodayCount" resultType="java.lang.Integer">
+        SELECT
+            count( * )
+        FROM
+            sens_post
+        WHERE
+            to_days( create_time ) = to_days( now( ) );
+    </select>
+
+    <select id="getLatestCommentByAcceptUser" resultType="com.liuyanzhao.sens.entity.Comment">
+        SELECT
+            id,
+            comment_author,
+            comment_content,
+            comment_status ,
+            create_time
+        FROM
+            sens_comment
+        WHERE
+            accept_user_id = #{userId}
+        ORDER BY
+            create_time DESC
+            LIMIT #{limit}
+    </select>
+
+
+    <update id="updateCommentStatus">
+        UPDATE sens_comment
+        SET comment_status = #{status}
+        WHERE
+            id = #{id}
+    </update>
+</mapper>

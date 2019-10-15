@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liuyanzhao.sens.mapper.UserMapper">
+
+  <sql id="normal">0</sql>
+  <sql id="ban">1</sql>
+  <sql id="deleted">2</sql>
+
+  <select id="findByRoleId" resultType="com.liuyanzhao.sens.entity.User">
+      SELECT
+          t.id,
+          t.user_name,
+          t.user_display_name,
+          t.user_pass,
+          t.user_email,
+          t.user_avatar,
+          t.user_desc,
+          t.user_site,
+          t.is_admin,
+          t.email_enable,
+          t.login_enable,
+          t.login_last,
+          t.login_error,
+          t.status,
+          t.create_time
+      FROM
+          sens_rbac_user_role_ref r,
+          sens_user t
+      WHERE
+          r.role_id = #{roleId} AND
+          r.user_id = t.id
+      ORDER BY
+          t.id DESC
+  </select>
+
+    <select id="findByRoleIdAndCondition" resultType="com.liuyanzhao.sens.entity.User">
+      SELECT
+          t.id,
+          t.user_name,
+          t.user_display_name,
+          t.user_pass,
+          t.user_email,
+          t.user_avatar,
+          t.user_desc,
+          t.user_site,
+          t.is_admin,
+          t.email_enable,
+          t.login_enable,
+          t.login_last,
+          t.login_error,
+          t.status,
+          t.create_time
+      FROM
+          sens_rbac_user_role_ref r,
+          sens_user t
+      WHERE
+          r.role_id = #{roleId} AND
+          r.user_id = t.id
+         <if test="user.status != null and user.status != ''">
+              AND t.status = #{user.status}
+         </if>
+          <if test="user.userName != null and user.userName != ''">
+              AND t.user_name LIKE CONCAT('%', #{user.userName}, '%')
+          </if>
+          <if test="user.userDisplayName != null and user.userDisplayName != ''">
+              AND t.user_display_name LIKE CONCAT('%', #{user.userDisplayName}, '%')
+          </if>
+          <if test="user.userEmail != null and user.userEmail != ''">
+              AND t.user_email LIKE CONCAT('%', #{user.userEmail}, '%')
+          </if>
+        <if test="user.userSite != null and user.userSite != ''">
+            AND t.user_site LIKE CONCAT('%', #{user.userSite}, '%')
+        </if>
+      ORDER BY
+          t.id DESC
+  </select>
+
+  <select id="findByWithoutRole" resultType="com.liuyanzhao.sens.entity.User">
+      SELECT
+          id,
+          user_name,
+          user_display_name,
+          user_pass,
+          user_email,
+          user_avatar,
+          user_desc,
+          user_site,
+          is_admin,
+          email_enable,
+          login_enable,
+          login_last,
+          login_error,
+          STATUS,
+          create_time
+      FROM
+          sens_user
+      WHERE
+          id NOT IN ( SELECT user_id FROM sens_rbac_user_role_ref )
+  </select>
+
+    <select id="getTodayCount" resultType="java.lang.Integer">
+        SELECT
+            count( * )
+        FROM
+            sens_post
+        WHERE
+            to_days( create_time ) = to_days( now( ) );
+    </select>
+
+    <select id="getUserPostRanking" resultType="com.liuyanzhao.sens.entity.User">
+        SELECT
+            count( * ) postCount,
+            u.id,
+            u.user_name,
+            u.user_avatar,
+            u.user_display_name,
+            u.login_last,
+            u.create_time
+        FROM
+            sens_post p,
+            sens_user u
+        WHERE
+            p.user_id = u.id
+        GROUP BY
+            p.user_id
+        ORDER BY
+            postCount DESC
+            LIMIT #{value}
+    </select>
+
+    <select id="getLatestUser" resultType="com.liuyanzhao.sens.entity.User">
+        SELECT
+            id,
+            user_name,
+            user_avatar,
+            user_display_name,
+            create_time
+        FROM
+            sens_user
+        ORDER BY
+            create_time DESC
+            LIMIT #{value}
+    </select>
+</mapper>

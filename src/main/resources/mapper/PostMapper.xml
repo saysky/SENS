@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liuyanzhao.sens.mapper.PostMapper">
+
+    <sql id="publish_status">0</sql>
+    <sql id="draft_status">1</sql>
+    <sql id="trash_status">2</sql>
+
+
+    <select id="findTopFive" resultType="com.liuyanzhao.sens.entity.Post">
+        SELECT
+            id,
+            user_id,
+            post_title,
+            post_type,
+            post_url,
+            post_summary,
+            post_thumbnail,
+            create_time,
+            post_status,
+            post_views,
+            post_likes,
+            comment_size
+        FROM
+            sens_post
+        WHERE
+            post_type = 'post'
+            AND post_status = 0
+        ORDER BY
+            create_time DESC
+            LIMIT 5
+    </select>
+
+    <select id="listYears" resultType="java.lang.Integer">
+        SELECT DISTINCT YEAR
+            ( create_time )
+        FROM
+            sens_post
+        WHERE
+            post_status = 0
+    </select>
+
+    <select id="findPostGroupByYearAndMonth" resultType="com.liuyanzhao.sens.model.dto.Archive">
+        SELECT
+            YEAR  ( create_time ) YEAR,
+            MONTH ( create_time ) MONTH,
+            COUNT( * ) count
+        FROM
+            sens_post
+        WHERE
+            post_status = 0
+            AND post_type = 'post'
+        GROUP BY
+            YEAR ( create_time ),
+            MONTH ( create_time )
+        ORDER BY
+            YEAR DESC,
+        MONTH DESC
+    </select>
+
+    <select id="findPostGroupByYear" resultType="com.liuyanzhao.sens.model.dto.Archive">
+        SELECT
+            YEAR ( create_time ) year,
+            COUNT( * ) count
+        FROM
+            sens_post
+        WHERE
+            post_status = 0
+            AND post_type = 'post'
+        GROUP BY
+            YEAR ( create_time )
+        ORDER BY
+        YEAR DESC
+    </select>
+
+    <select id="findPostByYearAndMonth" resultType="com.liuyanzhao.sens.model.dto.PostSimpleDto">
+        SELECT
+            id,
+            post_url,
+            post_title,
+            create_time,
+            YEAR ( create_time ) year,
+            MONTH ( create_time ) month 
+        FROM
+            sens_post 
+        WHERE
+            post_status = 0 
+            AND post_type = 'post' 
+            AND YEAR ( create_time ) = #{year} and month(create_time)=#{month}
+        ORDER BY
+            create_time DESC
+    </select>
+
+    <select id="findPostByYear" resultType="com.liuyanzhao.sens.model.dto.PostSimpleDto">
+        SELECT
+            id,
+            post_url,
+            post_title,
+            YEAR ( create_time ) year 
+        FROM
+            sens_post 
+        WHERE
+            post_status = 0 
+            AND post_type = 'post' 
+            AND YEAR ( create_time ) = #{year}
+        ORDER BY
+            create_time DESC
+    </select>
+
+
+    <select id="pagingPostByYearAndMonth" resultType="com.liuyanzhao.sens.entity.Post">
+        SELECT
+            id,
+            user_id,
+            post_title,
+            post_type,
+            post_url,
+            post_summary,
+            post_thumbnail,
+            create_time,
+            post_status,
+            post_views,
+            post_likes,
+            comment_size,
+            YEAR ( create_time ) year,
+            MONTH ( create_time ) month 
+        FROM
+            sens_post 
+        WHERE
+            post_status = 0 
+            AND post_type = 'post' 
+            AND YEAR ( create_time ) = #{year} and month(create_time)= #{month}
+        ORDER BY
+            create_time DESC
+    </select>
+
+    <select id="pagingPostByCategoryIdsAndPostStatus" resultType="com.liuyanzhao.sens.entity.Post">
+        SELECT
+            t.id,
+            t.user_id,
+            t.post_title,
+            t.post_type,
+            t.post_url,
+            t.post_summary,
+            t.post_thumbnail,
+            t.create_time,
+            t.post_status,
+            t.post_views,
+            t.post_likes,
+            t.comment_size
+        FROM
+        sens_post t, sens_post_category_ref r
+        <where>
+            r.cate_id IN
+            <foreach collection="cateIds" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            AND
+            r.post_id = t.id AND
+            t.post_status = #{status}
+        </where>
+        ORDER BY t.create_time DESC
+    </select>
+
+    <select id="pagingPostsByTagIdAndPostStatus" resultType="com.liuyanzhao.sens.entity.Post">
+        SELECT
+            t.id,
+            t.user_id,
+            t.post_title,
+            t.post_type,
+            t.post_url,
+            t.post_summary,
+            t.post_thumbnail,
+            t.create_time,
+            t.post_status,
+            t.post_views,
+            t.post_likes,
+            t.comment_size 
+        FROM
+            sens_post t,
+            sens_post_tag_ref r 
+        WHERE
+            r.tag_id = #{tagId} AND
+            r.post_id = t.id AND 
+            t.post_status = #{status}
+        ORDER BY
+            t.create_time DESC
+    </select>
+
+    <select id="getPostViewsSum" resultType="java.lang.Long">
+        SELECT
+            sum( post_views ) 
+        FROM
+            sens_post
+    </select>
+
+    <select id="findPostsByCategoryId" resultType="com.liuyanzhao.sens.entity.Post">
+        SELECT
+            t.id,
+            t.user_id,
+            t.post_title,
+            t.post_type,
+            t.post_url,
+            t.post_summary,
+            t.post_thumbnail,
+            t.create_time,
+            t.post_status,
+            t.post_views,
+            t.post_likes,
+            t.comment_size 
+        FROM
+            sens_post t,
+            sens_post_category_ref r 
+        WHERE
+            r.cate_id = #{value} AND
+            r.post_id = t.id 
+        ORDER BY
+            t.create_time DESC
+    </select>
+
+    <select id="findByPostIdAfter" resultType="com.liuyanzhao.sens.entity.Post">
+         SELECT
+            id,
+            user_id,
+            post_title,
+            post_type,
+            post_url,
+            post_summary,
+            post_thumbnail,
+            create_time,
+            post_status,
+            post_views,
+            post_likes,
+            comment_size
+        FROM
+            sens_post
+        WHERE
+            id &gt;#{postId} AND post_type = #{postType} AND post_status = 0
+        ORDER BY
+        create_time DESC
+        LIMIT 1
+    </select>
+
+    <select id="findByPostIdBefore" resultType="com.liuyanzhao.sens.entity.Post">
+        SELECT
+            id,
+            user_id,
+            post_title,
+            post_type,
+            post_url,
+            post_summary,
+            post_thumbnail,
+            create_time,
+            post_status,
+            post_views,
+            post_likes,
+            comment_size
+        FROM
+            sens_post
+        WHERE
+            id &lt;#{postId} AND post_type = #{postType} AND post_status = 0
+        ORDER BY
+        create_time DESC
+        LIMIT 1
+    </select>
+
+    <select id="selectMaxPostUpdate" resultType="java.util.Date">
+        SELECT
+            MAX( update_time )
+        FROM
+            sens_post
+    </select>
+
+    <select id="selectAllPostIds" resultType="java.lang.Long">
+        SELECT
+            id
+        FROM
+            sens_post
+    </select>
+
+    <update id="resetCommentSize">
+        UPDATE sens_post t 
+        SET t.comment_size = ( SELECT COUNT( * ) FROM sens_comment c WHERE c.post_id = #{value} AND c.comment_status = 0 ) 
+        WHERE
+            t.id = #{value}
+    </update>
+
+    <update id="incrPostLikes">
+        UPDATE sens_post
+        SET post_likes = post_likes + 1
+        WHERE
+            id = #{value}
+    </update>
+
+    <update id="incrPostViews">
+        UPDATE sens_post
+        SET post_views = post_views + 1
+        WHERE
+            id = #{value}
+    </update>
+
+    <update id="updatePostSummary">
+        UPDATE sens_post
+        SET post_summary = #{summary}
+        WHERE
+            id = #{postId}
+    </update>
+
+    <delete id="deleteByUserId">
+        DELETE 
+        FROM
+            sens_post 
+        WHERE
+            user_id = #{value}
+    </delete>
+
+    <select id="selectIdsByUserId" resultType="java.lang.Long">
+       SELECT
+            id
+       FROM
+            sens_post 
+       WHERE
+            user_id = #{userId}
+    </select>
+
+    <select id="getTodayCount" resultType="java.lang.Integer">
+        SELECT
+            count( * )
+        FROM
+            sens_post
+        WHERE
+            to_days( create_time ) = to_days( now( ) );
+    </select>
+
+    <select id="getPostRankingByPostView" resultType="com.liuyanzhao.sens.model.dto.PostSimpleDto">
+        SELECT
+            id,
+            post_title,
+            user_id,
+            post_views,
+            create_time
+        FROM
+            sens_post
+        ORDER BY
+            post_views DESC
+            LIMIT #{limit}
+    </select>
+
+    <select id="getPostRankingByUserIdAndPostView" resultType="com.liuyanzhao.sens.model.dto.PostSimpleDto">
+        SELECT
+            id,
+            post_title,
+            user_id,
+            post_views
+        FROM
+            sens_post
+        WHERE user_id = #{userId}
+        ORDER BY
+            post_views DESC
+            LIMIT #{limit}
+    </select>
+
+    <select id="findPostByCateName" resultType="com.liuyanzhao.sens.entity.Post">
+        SELECT
+            t.id,
+            t.user_id,
+            t.post_title,
+            t.post_type,
+            t.post_url,
+            t.post_summary,
+            t.post_thumbnail,
+            t.create_time,
+            t.post_status,
+            t.post_views,
+            t.post_likes,
+            t.comment_size
+        FROM
+            sens_post t,
+            sens_post_category_ref r,
+            sens_category c
+        WHERE
+            c.cate_name = #{cateName} AND
+            c.id = r.cate_id  AND
+            r.post_id = t.id
+        ORDER BY
+            t.create_time DESC
+    </select>
+</mapper>

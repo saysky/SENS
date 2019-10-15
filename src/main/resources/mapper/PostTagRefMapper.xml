@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liuyanzhao.sens.mapper.PostTagRefMapper">
+  <resultMap id="BaseResultMap" type="com.liuyanzhao.sens.entity.PostTagRef">
+    <result column="post_id" jdbcType="INTEGER" property="postId"/>
+    <result column="tag_id" jdbcType="INTEGER" property="tagId"/>
+  </resultMap>
+
+  <delete id="deleteByPostId">
+      DELETE
+      FROM
+          sens_post_tag_ref
+      WHERE
+          post_id = #{value}
+  </delete>
+
+  <delete id="deleteByTagId">
+      DELETE
+      FROM
+          sens_post_tag_ref
+      WHERE
+          tag_id = #{value}
+  </delete>
+
+  <select id="selectPostIdByTagId" resultType="java.lang.Long">
+      SELECT
+          post_id
+      FROM
+          sens_post_tag_ref
+      WHERE
+          tag_id = #{value}
+  </select>
+
+  <select id="selectTagIdByPostId" resultType="java.lang.Long">
+      SELECT
+          tag_id
+      FROM
+          sens_post_tag_ref
+      WHERE
+          post_id = #{value}
+  </select>
+</mapper>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liuyanzhao.sens.mapper.TagMapper">
+
+    <delete id="deleteByUserId">
+       DELETE
+       FROM
+           sens_tag
+       WHERE
+           user_id = #{value}
+    </delete>
+
+    <select id="findByPostId" resultType="com.liuyanzhao.sens.entity.Tag">
+        SELECT
+            t.id,
+            t.tag_name,
+            t.user_id,
+            t.create_time
+        FROM
+            sens_tag t,
+            sens_post_tag_ref r
+        WHERE
+            r.post_id = #{value}
+            AND r.tag_id = t.id
+    </select>
+
+    <select id="findAllWithCount" resultType="com.liuyanzhao.sens.entity.Tag">
+        SELECT
+            t.id,
+            t.user_id,
+            t.tag_name,
+            t.create_time,
+            count( * )  count
+        FROM
+            `sens_post_tag_ref`r,
+            `sens_tag` t
+        WHERE
+            t.id = r.tag_id
+
+        GROUP BY
+            r.tag_id
+        ORDER BY
+            count DESC
+        LIMIT #{value}
+  </select>
+
+
+    <select id="findByUserIdWithCount" resultType="com.liuyanzhao.sens.entity.Tag">
+        SELECT
+            t.id,
+            t.tag_name,
+            count( r.tag_id ) count
+        FROM
+            ( SELECT id, tag_name FROM sens_tag WHERE user_id = #{userId} ) t
+            LEFT JOIN sens_post_tag_ref r ON r.tag_id = t.id
+        GROUP BY
+            t.id
+        ORDER BY
+            count DESC
+    </select>
+
+    <select id="findTagNotUse" resultType="com.liuyanzhao.sens.entity.Tag">
+      SELECT
+          t.id,
+          t.tag_name,
+          t.user_id,
+          t.create_time
+      FROM
+          sens_tag t
+      WHERE
+          t.id NOT IN ( SELECT DISTINCT ( r.tag_id ) FROM sens_post_tag_ref r )
+  </select>
+
+    <select id="getTodayCount" resultType="java.lang.Integer">
+        SELECT
+            count( * )
+        FROM
+            sens_post
+        WHERE
+            to_days( create_time ) = to_days( now( ) );
+    </select>
+
+    <select id="getTagRankingByUserId" resultType="com.liuyanzhao.sens.entity.Tag">
+        SELECT
+            t.id,
+            t.tag_name,
+            count( r.tag_id ) count
+        FROM
+            ( SELECT id, tag_name FROM sens_tag WHERE user_id = #{userId} ) t
+            LEFT JOIN sens_post_tag_ref r ON r.tag_id = t.id
+        GROUP BY
+            t.id
+        ORDER BY
+            count DESC
+            LIMIT #{limit}
+    </select>
+
+</mapper>

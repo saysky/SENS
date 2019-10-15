@@ -1,0 +1,4 @@
+[com.liuyanzhao.sens.web.controller.admin]
+BackupController.backupResources = 0 0 1 * * ?
+BackupController.backupDatabase = 0 0 2 * * ?
+BackupController.backupPosts = 0 0 3 * * ?
