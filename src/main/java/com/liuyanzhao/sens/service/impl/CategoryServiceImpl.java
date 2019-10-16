@@ -186,7 +186,7 @@ public class CategoryServiceImpl implements CategoryService {
         List<Long> allCateIds = categoryList.stream().map(Category::getId).collect(Collectors.toList());
         List<Category> result = new ArrayList<>();
         for(Long id : cateIds) {
-            if(!allCateIds.contains(id)) {
+            if(allCateIds.contains(id)) {
                 Category category = new Category();
                 category.setId(id);
                 result.add(category);
