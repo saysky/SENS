@@ -83,7 +83,10 @@ public class FrontIndexController extends BaseController {
         condition.setPostStatus(PostStatusEnum.PUBLISHED.getCode());
         Page<Post> posts = postService.findAll(page, new QueryCondition<>(condition));
         List<Post> postList = posts.getRecords();
-        postList.forEach(post -> post.setCategories(categoryService.findByPostId(post.getId())));
+        postList.forEach(post -> {
+            post.setCategories(categoryService.findByPostId(post.getId()));
+            post.setUser(userService.get(post.getUserId()));
+        });
         model.addAttribute("posts", postList);
         model.addAttribute("pageInfo", PageUtil.convertPageVo(page));
 
@@ -195,7 +198,6 @@ public class FrontIndexController extends BaseController {
         }
         model.addAttribute("time", (System.currentTimeMillis() - startTime) + "ms");
         List<Post> postList = posts.getRecords();
-        postList.forEach(post -> post.setCategories(categoryService.findByPostId(post.getId())));
         model.addAttribute("prefix", "/search");
         model.addAttribute("suffix", "?keyword=" + keyword);
         model.addAttribute("pageInfo", PageUtil.convertPageVo(page));
@@ -244,7 +246,10 @@ public class FrontIndexController extends BaseController {
         condition.setUserId(user.getId());
         Page<Post> posts = postService.findAll(page, new QueryCondition<>(condition));
         List<Post> postList = posts.getRecords();
-        postList.forEach(post -> post.setCategories(categoryService.findByPostId(post.getId())));
+        postList.forEach(post -> {
+            post.setCategories(categoryService.findByPostId(post.getId()));
+            post.setUser(user);
+        });
 
         //该用户的文章数
         Integer postCount = postService.countByUserId(user.getId());

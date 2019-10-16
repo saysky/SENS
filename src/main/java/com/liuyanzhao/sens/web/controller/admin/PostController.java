@@ -132,9 +132,9 @@ public class PostController extends BaseController {
     /**
      * 添加/更新文章
      *
-     * @param post     Post实体
+     * @param post    Post实体
      * @param cateIds 分类列表
-     * @param tagList  标签列表
+     * @param tagList 标签列表
      */
     @PostMapping(value = "/save")
     @ResponseBody
@@ -189,7 +189,7 @@ public class PostController extends BaseController {
         }
         //当没有选择文章缩略图的时候，自动分配一张内置的缩略图
         if (StringUtils.equals(post.getPostThumbnail(), BlogPropertiesEnum.DEFAULT_THUMBNAIL.getProp())) {
-            post.setPostThumbnail("/static/images/thumbnail/img_" + RandomUtil.randomInt(0, 14) + ".jpg");
+            post.setPostThumbnail(SensConst.OPTIONS.get(BlogPropertiesEnum.BLOG_STATIC_URL.getProp()) + "/static/images/thumbnail/img_" + RandomUtil.randomInt(0, 14) + ".jpg");
         }
         post.setUserId(getLoginUserId());
         postService.insertOrUpdate(post);

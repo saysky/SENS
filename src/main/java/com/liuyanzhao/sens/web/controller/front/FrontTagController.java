@@ -100,7 +100,11 @@ public class FrontTagController extends BaseController {
         Page page = PageUtil.initMpPage(pageNumber, pageSize, sort, order);
         Page<Post> posts = postService.findPostsByTags(tag, page);
         List<Post> postList = posts.getRecords();
-        postList.forEach(post -> post.setCategories(categoryService.findByPostId(post.getId())));
+        User user = userService.get(tag.getUserId());
+        postList.forEach(post -> {
+            post.setCategories(categoryService.findByPostId(post.getId()));
+            post.setUser(user);
+        });
         model.addAttribute("posts", postList);
         model.addAttribute("pageInfo", PageUtil.convertPageVo(page));
 
@@ -110,7 +114,6 @@ public class FrontTagController extends BaseController {
 
         //侧边栏
         model.addAttribute("sidebarType", SidebarTypeEnum.TAG.getValue());
-        User user = userService.get(tag.getUserId());
         if (user != null) {
             //该用户的文章数
             Integer postCount = postService.countByUserId(user.getId());

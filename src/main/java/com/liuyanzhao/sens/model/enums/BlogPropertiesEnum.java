@@ -203,7 +203,12 @@ public enum BlogPropertiesEnum {
     /**
      * 开启ES
      */
-    OPEN_ELASTICSEARCH("open_elasticsearch");
+    OPEN_ELASTICSEARCH("open_elasticsearch"),
+
+    /**
+     * 静态资源CDN
+     */
+    BLOG_STATIC_URL("blog_static_url");
 
     private String prop;
 

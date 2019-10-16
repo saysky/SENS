@@ -88,11 +88,14 @@ public class FrontCategoryController extends BaseController {
             return this.renderNotFound();
         }
         posts = postService.findPostByCategory(category, page);
-
         List<Post> postList = posts.getRecords();
         List<Category> categories = new ArrayList<>();
         categories.add(category);
-        postList.forEach(post -> post.setCategories(categories));
+        User user = userService.get(category.getUserId());
+        postList.forEach(post -> {
+            post.setCategories(categories);
+            post.setUser(user);
+        });
         model.addAttribute("posts", postList);
         model.addAttribute("pageInfo", PageUtil.convertPageVo(page));
 
@@ -101,7 +104,6 @@ public class FrontCategoryController extends BaseController {
 
         //侧边栏
         model.addAttribute("sidebarType", SidebarTypeEnum.CATEGORY.getValue());
-        User user = userService.get(category.getUserId());
         if (user != null) {
             //该用户的文章数
             Integer postCount = postService.countByUserId(user.getId());

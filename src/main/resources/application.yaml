@@ -92,8 +92,8 @@ logging:
       springframework:
         boot:
           autoconfigure: error
-        web:
-          trace
+#        web:
+#          trace
 application:
   formatted-version: 1.0.0
 
