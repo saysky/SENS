@@ -116,16 +116,11 @@ public class FrontArticleController extends BaseController {
             model.addAttribute("isAuthor", Boolean.TRUE);
         }
 
-        model.addAttribute("sameCategoryPosts", sameCategoryPosts);
-        model.addAttribute("post", post);
-        model.addAttribute("rainbow", commentPage.getRainbow());
-        model.addAttribute("comments", commentPage.getCommentListPage());
-        model.addAttribute("tagWords", CollUtil.join(tagWords, ","));
-
         //侧边栏
         model.addAttribute("sidebarType", SidebarTypeEnum.DETAIL.getValue());
         User user = userService.get(post.getUserId());
         if (user != null) {
+            post.setUser(user);
             //该用户的文章数
             user.setPostCount(postService.countByUserId(user.getId()));
             //该用户的评论数
@@ -136,6 +131,13 @@ public class FrontArticleController extends BaseController {
             model.addAttribute("tagRanking", tagService.getTagRankingByUserId(user.getId(), 100));
             model.addAttribute("postRanking", postService.getPostRankingByUserIdAndPostView(user.getId(), 10));
         }
+
+        //文章相关
+        model.addAttribute("sameCategoryPosts", sameCategoryPosts);
+        model.addAttribute("post", post);
+        model.addAttribute("rainbow", commentPage.getRainbow());
+        model.addAttribute("comments", commentPage.getCommentListPage());
+        model.addAttribute("tagWords", CollUtil.join(tagWords, ","));
         return this.render("post");
     }
 
