@@ -191,6 +191,7 @@ public class PostController extends BaseController {
         if (StringUtils.equals(post.getPostThumbnail(), BlogPropertiesEnum.DEFAULT_THUMBNAIL.getProp())) {
             post.setPostThumbnail(SensConst.OPTIONS.get(BlogPropertiesEnum.BLOG_STATIC_URL.getProp()) + "/static/images/thumbnail/img_" + RandomUtil.randomInt(0, 14) + ".jpg");
         }
+        post.setPostType(PostTypeEnum.POST_TYPE_POST.getValue());
         post.setUserId(getLoginUserId());
         postService.insertOrUpdate(post);
         if (isOpenCheck && !isAdmin) {

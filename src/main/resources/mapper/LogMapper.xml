@@ -10,7 +10,7 @@
             request_url,
             request_type,
             request_param,
-            name,
+            `name`,
             ip,
             create_time
         FROM
@@ -28,7 +28,7 @@
             request_url,
             request_type,
             request_param,
-            name,
+            `name`,
             ip,
             create_time
         FROM

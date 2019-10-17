@@ -120,7 +120,6 @@ public class SystemLogAspect {
             //请求耗时
             Long logElapsedTime = endTime - beginTime;
             log.setCostTime(logElapsedTime.intValue());
-
             //调用线程保存至数据库
             ThreadPoolUtil.getPool().execute(new SaveSystemLogThread(log, logService));
 

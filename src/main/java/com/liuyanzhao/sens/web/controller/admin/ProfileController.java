@@ -82,7 +82,8 @@ public class ProfileController extends BaseController {
     public JsonResult saveProfile(@ModelAttribute User user) {
         User loginUser = getLoginUser();
 
-        User saveUser = new User();
+        User saveUser = userService.get(loginUser.getId());
+        saveUser.setUserPass(null);
         saveUser.setId(loginUser.getId());
         saveUser.setUserName(user.getUserName());
         saveUser.setUserDisplayName(user.getUserDisplayName());
