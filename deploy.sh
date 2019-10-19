@@ -20,6 +20,6 @@ echo "代码打包完毕！"
 cd $SENS_DIR/target
 
 # 运行SENS
-sh sens.sh start
+sh $SENS_DIR/bin/sens.sh start
 
 echo "SENS部署完毕，Enjoy！"

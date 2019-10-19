@@ -20,7 +20,8 @@ start(){
   if [ $? -eq "0" ]; then
     echo "${APP_NAME} 正在运行。 pid=${pid} ."
   else
-    nohup java -server -Xms1024m -Xmx1024m -Xmn340m -Xloggc:/www/wwwroot/sens-gc.log -jar $APP_NAME > /dev/null 2>&1 &
+    nohup java -server -Xms1024m -Xmx1024m -Xmn340m -Xloggc:/www/wwwroot/sens-gc.log -jar $APP_NAME --server.port=80 > /dev/null 2>&1 &
+
     echo "${APP_NAME}启动成功，请查看日志确保运行正常。"
     fi
 }
