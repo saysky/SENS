@@ -47,6 +47,8 @@ public class FrontIndexController extends BaseController {
     @Autowired
     private TagService tagService;
 
+    @Autowired
+    private SlideService slideService;
     /**
      * 请求首页
      *
@@ -96,7 +98,12 @@ public class FrontIndexController extends BaseController {
         List<Post> notices = postService.findByPostTypeAndStatus(PostTypeEnum.POST_TYPE_NOTICE.getValue(), PostStatusEnum.PUBLISHED.getCode());
         model.addAttribute("notices", notices);
 
-        //3.侧边栏
+        //3.幻灯片
+        List<Slide> slides = slideService.findBySlideType(SlideTypeEnum.INDEX_SLIDE.getCode());
+        model.addAttribute("slides", slides);
+
+
+        //4.侧边栏
         model.addAttribute("sidebarType", SidebarTypeEnum.INDEX.getValue());
         //统计
         model.addAttribute("allCount", postService.getAllCount());
