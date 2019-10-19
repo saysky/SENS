@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 指定SENS的根目录，请按实际修改
-SENS_DIR="/www/wwwroot/SENS
+SENS_DIR="/www/wwwroot/SENS"
 # 拉取最新的源码
 # git pull
 #echo "代码拉取完毕！"
