@@ -22,6 +22,7 @@
         WHERE
             r.post_id = #{value}
             AND r.tag_id = t.id
+            AND t.del_flag = 0
     </select>
 
     <select id="findAllWithCount" resultType="com.liuyanzhao.sens.entity.Tag">
@@ -36,7 +37,8 @@
             `sens_tag` t
         WHERE
             t.id = r.tag_id
-
+            AND t.del_flag = 0
+            AND r.del_flag = 0
         GROUP BY
             r.tag_id
         ORDER BY
@@ -68,7 +70,8 @@
       FROM
           sens_tag t
       WHERE
-          t.id NOT IN ( SELECT DISTINCT ( r.tag_id ) FROM sens_post_tag_ref r )
+          t.id NOT IN ( SELECT DISTINCT ( r.tag_id ) FROM sens_post_tag_ref r WHERE r.del_flag = 0)
+          AND t.del_flag = 0
   </select>
 
     <select id="getTodayCount" resultType="java.lang.Integer">
@@ -77,7 +80,8 @@
         FROM
             sens_post
         WHERE
-            to_days( create_time ) = to_days( now( ) );
+            to_days( create_time ) = to_days( now( ) )
+            AND del_flag = 0
     </select>
 
     <select id="getTagRankingByUserId" resultType="com.liuyanzhao.sens.entity.Tag">
@@ -86,8 +90,10 @@
             t.tag_name,
             count( r.tag_id ) count
         FROM
-            ( SELECT id, tag_name FROM sens_tag WHERE user_id = #{userId} ) t
-            LEFT JOIN sens_post_tag_ref r ON r.tag_id = t.id
+            ( SELECT id, tag_name FROM sens_tag WHERE user_id = #{userId} AND del_flag = 0) t
+            LEFT JOIN sens_post_tag_ref r
+        ON   r.tag_id = t.id
+             AND r.del_flag = 0
         GROUP BY
             t.id
         ORDER BY

@@ -47,6 +47,9 @@ public class PostController extends BaseController {
     private CategoryService categoryService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private TagService tagService;
 
 
@@ -151,6 +154,7 @@ public class PostController extends BaseController {
         if (isOpenCheck && !isAdmin) {
             post.setPostStatus(PostStatusEnum.CHECKING.getCode());
         }
+        post.setUserId(getLoginUserId());
 
         //2、非管理员只能修改自己的文章，管理员都可以修改
         Post originPost = null;
@@ -160,6 +164,7 @@ public class PostController extends BaseController {
                 return new JsonResult(ResultCodeEnum.FAIL.getCode(), localeMessageUtil.getMessage("code.admin.common.permission-denied"));
             }
             //以下属性不能修改
+            post.setUserId(originPost.getUserId());
             post.setPostViews(originPost.getPostViews());
             post.setCommentSize(originPost.getCommentSize());
             post.setPostLikes(originPost.getPostLikes());
@@ -192,7 +197,6 @@ public class PostController extends BaseController {
             post.setPostThumbnail(SensConst.OPTIONS.get(BlogPropertiesEnum.BLOG_STATIC_URL.getProp()) + "/static/images/thumbnail/img_" + RandomUtil.randomInt(0, 14) + ".jpg");
         }
         post.setPostType(PostTypeEnum.POST_TYPE_POST.getValue());
-        post.setUserId(getLoginUserId());
         postService.insertOrUpdate(post);
         if (isOpenCheck && !isAdmin) {
             return new JsonResult(ResultCodeEnum.SUCCESS.getCode(), "文章已提交审核");
@@ -254,6 +258,24 @@ public class PostController extends BaseController {
         log.info("编号为" + postId + "的文章已改变为发布状态");
         return new JsonResult(ResultCodeEnum.SUCCESS.getCode(), localeMessageUtil.getMessage("code.admin.common.operation-success"));
     }
+
+    /**
+     * 审核通过文章
+     *
+     * @param postId 文章编号
+     * @return 重定向到/admin/post
+     */
+    @PostMapping(value = "/pass")
+    @ResponseBody
+    @SystemLog(description = "审核通过文章", type = LogTypeEnum.OPERATION)
+    public JsonResult passCheck(@RequestParam("id") Long postId) {
+        Post post = postService.get(postId);
+        basicCheck(post);
+        postService.updatePostStatus(postId, PostStatusEnum.PUBLISHED.getCode());
+        log.info("编号为" + postId + "的文章已通过审核");
+        return new JsonResult(ResultCodeEnum.SUCCESS.getCode(), localeMessageUtil.getMessage("code.admin.common.operation-success"));
+    }
+
 
     /**
      * 处理删除文章的请求
@@ -356,6 +378,35 @@ public class PostController extends BaseController {
         return "admin/admin_post_editor";
     }
 
+
+    /**
+     * 待审核文章列表
+     *
+     * @param model model
+     * @return 模板路径admin/admin_post
+     */
+    @GetMapping("/check")
+    public String postCheckList(Model model,
+                                @RequestParam(value = "page", defaultValue = "1") Integer pageNumber,
+                                @RequestParam(value = "size", defaultValue = "15") Integer pageSize,
+                                @RequestParam(value = "sort", defaultValue = "createTime") String sort,
+                                @RequestParam(value = "order", defaultValue = "desc") String order,
+                                @ModelAttribute SearchVo searchVo) {
+        Post condition = new Post();
+        condition.setPostType(PostTypeEnum.POST_TYPE_POST.getValue());
+        condition.setPostStatus(PostStatusEnum.CHECKING.getCode());
+        Page page = PageUtil.initMpPage(pageNumber, pageSize, sort, order);
+        Page<Post> posts = postService.findAll(
+                page,
+                new QueryCondition<>(condition, searchVo));
+        List<Post> postList = posts.getRecords();
+        postList.forEach(post -> userService.get(post.getUserId()));
+        model.addAttribute("posts", postList);
+        model.addAttribute("pageInfo", PageUtil.convertPageVo(page));
+        model.addAttribute("order", order);
+        model.addAttribute("sort", sort);
+        return "admin/admin_post_check";
+    }
 
     /**
      * 验证文章路径是否已经存在

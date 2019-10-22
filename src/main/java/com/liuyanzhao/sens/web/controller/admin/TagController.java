@@ -102,7 +102,12 @@ public class TagController extends BaseController {
      * @return 模板路径admin/admin_tag
      */
     @GetMapping(value = "/edit")
-    public String toEditTag(Model model, @RequestParam("id") Long tagId) {
+    public String toEditTag(Model model,
+                            @RequestParam(value = "page", defaultValue = "0") Integer pageNumber,
+                            @RequestParam(value = "size", defaultValue = "50") Integer pageSize,
+                            @RequestParam(value = "sort", defaultValue = "createTime") String sort,
+                            @RequestParam(value = "order", defaultValue = "desc") String order,
+                            @RequestParam("id") Long tagId) {
         Long userId = getLoginUserId();
         //当前修改的标签
         Tag tag = tagService.get(tagId);
@@ -112,8 +117,10 @@ public class TagController extends BaseController {
         model.addAttribute("updateTag", tag);
 
         //所有标签
-        List<Tag> tags = tagService.findByUserId(userId);
-        model.addAttribute("tags", tags);
+        Page page = PageUtil.initMpPage(pageNumber, pageSize, sort, order);
+        Page<Tag> tagPage = tagService.findByUserIdWithCount(userId, page);
+        model.addAttribute("tags", tagPage.getRecords());
+        model.addAttribute("pageInfo", PageUtil.convertPageVo(page));
         return "admin/admin_tag";
     }
 }

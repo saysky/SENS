@@ -89,7 +89,7 @@ public class RedisUtil {
      * @param key
      */
     public void delByKeys(String key) {
-        Set<String> keys = redisTemplate.keys(key);
+        Set<String> keys = redisTemplate.keys(key+"*");
         redisTemplate.delete(keys);
     }
 

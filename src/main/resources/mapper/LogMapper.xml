@@ -15,6 +15,7 @@
             create_time
         FROM
             sens_log
+        WHERE  del_flag = 0
         ORDER BY
             create_time DESC
             LIMIT #{value}
@@ -34,6 +35,7 @@
         FROM
             sens_log
         WHERE
+            del_flag = 0 AND
             log_type IN
             <foreach collection="logTypes" item="item" open="(" separator="," close=")">
                 #{item}
@@ -60,7 +62,7 @@
 
     <select id="findLatestLogByUserId" resultType="com.liuyanzhao.sens.entity.Log">
         SELECT
-          id,
+            id,
             username,
             log_type,
             request_url,
@@ -73,6 +75,7 @@
             sens_log
         WHERE
             user_id = #{userId}
+            AND del_flag = 0
         ORDER BY
             create_time DESC
             LIMIT #{limit}

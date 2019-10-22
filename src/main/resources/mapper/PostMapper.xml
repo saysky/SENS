@@ -26,6 +26,7 @@
         WHERE
             post_type = 'post'
             AND post_status = 0
+            AND del_flag = 0
         ORDER BY
             create_time DESC
             LIMIT 5
@@ -38,6 +39,7 @@
             sens_post
         WHERE
             post_status = 0
+            AND del_flag = 0
     </select>
 
     <select id="findPostGroupByYearAndMonth" resultType="com.liuyanzhao.sens.model.dto.Archive">
@@ -50,6 +52,7 @@
         WHERE
             post_status = 0
             AND post_type = 'post'
+            AND del_flag = 0
         GROUP BY
             YEAR ( create_time ),
             MONTH ( create_time )
@@ -67,6 +70,7 @@
         WHERE
             post_status = 0
             AND post_type = 'post'
+            AND del_flag = 0
         GROUP BY
             YEAR ( create_time )
         ORDER BY
@@ -87,6 +91,7 @@
             post_status = 0 
             AND post_type = 'post' 
             AND YEAR ( create_time ) = #{year} and month(create_time)=#{month}
+            AND del_flag = 0
         ORDER BY
             create_time DESC
     </select>
@@ -103,6 +108,7 @@
             post_status = 0 
             AND post_type = 'post' 
             AND YEAR ( create_time ) = #{year}
+            AND del_flag = 0
         ORDER BY
             create_time DESC
     </select>
@@ -130,6 +136,7 @@
             post_status = 0 
             AND post_type = 'post' 
             AND YEAR ( create_time ) = #{year} and month(create_time)= #{month}
+            AND del_flag = 0
         ORDER BY
             create_time DESC
     </select>
@@ -158,6 +165,8 @@
             AND
             r.post_id = t.id AND
             t.post_status = #{status}
+            AND t.del_flag = 0
+            AND r.del_flag = 0
         </where>
         ORDER BY t.create_time DESC
     </select>
@@ -183,6 +192,8 @@
             r.tag_id = #{tagId} AND
             r.post_id = t.id AND 
             t.post_status = #{status}
+            AND t.del_flag = 0
+            AND r.del_flag = 0
         ORDER BY
             t.create_time DESC
     </select>
@@ -192,6 +203,8 @@
             sum( post_views ) 
         FROM
             sens_post
+        WHERE
+            del_flag = 0
     </select>
 
     <select id="findPostsByCategoryId" resultType="com.liuyanzhao.sens.entity.Post">
@@ -213,7 +226,9 @@
             sens_post_category_ref r 
         WHERE
             r.cate_id = #{value} AND
-            r.post_id = t.id 
+            r.post_id = t.id
+            AND t.del_flag = 0
+            AND r.del_flag = 0
         ORDER BY
             t.create_time DESC
     </select>
@@ -235,7 +250,10 @@
         FROM
             sens_post
         WHERE
-            id &gt;#{postId} AND post_type = #{postType} AND post_status = 0
+            id &gt;#{postId}
+            AND post_type = #{postType}
+            AND post_status = 0
+            AND del_flag = 0
         ORDER BY
         create_time DESC
         LIMIT 1
@@ -258,7 +276,9 @@
         FROM
             sens_post
         WHERE
-            id &lt;#{postId} AND post_type = #{postType} AND post_status = 0
+            id &lt;#{postId} AND post_type = #{postType}
+             AND post_status = 0
+             AND del_flag = 0
         ORDER BY
         create_time DESC
         LIMIT 1
@@ -269,6 +289,8 @@
             MAX( update_time )
         FROM
             sens_post
+        WHERE
+            del_flag = 0
     </select>
 
     <select id="selectAllPostIds" resultType="java.lang.Long">
@@ -276,6 +298,8 @@
             id
         FROM
             sens_post
+        WHERE
+            del_flag = 0
     </select>
 
     <update id="resetCommentSize">
@@ -283,6 +307,7 @@
         SET t.comment_size = ( SELECT COUNT( * ) FROM sens_comment c WHERE c.post_id = #{value} AND c.comment_status = 0 ) 
         WHERE
             t.id = #{value}
+            AND del_flag = 0
     </update>
 
     <update id="incrPostLikes">
@@ -290,6 +315,7 @@
         SET post_likes = post_likes + 1
         WHERE
             id = #{value}
+            AND del_flag = 0
     </update>
 
     <update id="incrPostViews">
@@ -297,6 +323,7 @@
         SET post_views = post_views + 1
         WHERE
             id = #{value}
+            AND del_flag = 0
     </update>
 
     <update id="updatePostSummary">
@@ -304,6 +331,7 @@
         SET post_summary = #{summary}
         WHERE
             id = #{postId}
+            AND del_flag = 0
     </update>
 
     <delete id="deleteByUserId">
@@ -312,6 +340,7 @@
             sens_post 
         WHERE
             user_id = #{value}
+            AND del_flag = 0
     </delete>
 
     <select id="selectIdsByUserId" resultType="java.lang.Long">
@@ -321,6 +350,7 @@
             sens_post 
        WHERE
             user_id = #{userId}
+            AND del_flag = 0
     </select>
 
     <select id="getTodayCount" resultType="java.lang.Integer">
@@ -329,7 +359,8 @@
         FROM
             sens_post
         WHERE
-            to_days( create_time ) = to_days( now( ) );
+            to_days( create_time ) = to_days( now( ) )
+            AND del_flag = 0
     </select>
 
     <select id="getPostRankingByPostView" resultType="com.liuyanzhao.sens.model.dto.PostSimpleDto">
@@ -341,6 +372,9 @@
             create_time
         FROM
             sens_post
+        WHERE
+            post_type = 'post' AND
+            del_flag = 0
         ORDER BY
             post_views DESC
             LIMIT #{limit}
@@ -354,7 +388,9 @@
             post_views
         FROM
             sens_post
-        WHERE user_id = #{userId}
+        WHERE
+            user_id = #{userId}
+            AND del_flag = 0
         ORDER BY
             post_views DESC
             LIMIT #{limit}
@@ -382,6 +418,9 @@
             c.cate_name = #{cateName} AND
             c.id = r.cate_id  AND
             r.post_id = t.id
+            AND t.del_flag = 0
+            AND r.del_flag = 0
+            AND c.del_flag = 0
         ORDER BY
             t.create_time DESC
     </select>

@@ -1,5 +1,5 @@
 #!/bin/bash
-APP_NAME=sens-latest.jar
+APP_NAME=sens-1.5.0.jar
 
 usage() {
     echo "用法: sh sens.sh [start(启动)|stop(停止)|restart(重启)|status(状态)]"

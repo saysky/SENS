@@ -9,5 +9,6 @@
             sens_post
         WHERE
             to_days( create_time ) = to_days( now( ) );
+         AND del_flag = 0
     </select>
 </mapper>

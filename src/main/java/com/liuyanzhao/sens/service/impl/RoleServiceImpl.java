@@ -1,14 +1,18 @@
 package com.liuyanzhao.sens.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.liuyanzhao.sens.common.constant.RedisKeyExpire;
+import com.liuyanzhao.sens.common.constant.RedisKeys;
 import com.liuyanzhao.sens.entity.Permission;
 import com.liuyanzhao.sens.entity.Role;
 import com.liuyanzhao.sens.entity.RolePermissionRef;
 import com.liuyanzhao.sens.mapper.RoleMapper;
 import com.liuyanzhao.sens.service.RolePermissionRefService;
 import com.liuyanzhao.sens.service.RoleService;
+import com.liuyanzhao.sens.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +36,9 @@ public class RoleServiceImpl implements RoleService {
 
     @Autowired
     private RolePermissionRefService rolePermissionRefService;
+
+    @Autowired
+    private RedisUtil redisUtil;
 
     @Override
     public BaseMapper<Role> getRepository() {
@@ -121,6 +128,8 @@ public class RoleServiceImpl implements RoleService {
         } else {
             update(entity);
         }
+
+        redisUtil.delByKeys(RedisKeys.USER_PERMISSION_URLS);
         return entity;
     }
 

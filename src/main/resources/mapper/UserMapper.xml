@@ -29,6 +29,8 @@
       WHERE
           r.role_id = #{roleId} AND
           r.user_id = t.id
+          AND t.del_flag = 0
+          AND r.del_flag = 0
       ORDER BY
           t.id DESC
   </select>
@@ -54,6 +56,8 @@
           sens_rbac_user_role_ref r,
           sens_user t
       WHERE
+          t.del_flag = 0 AND
+          r.del_flag = 0 AND
           r.role_id = #{roleId} AND
           r.user_id = t.id
          <if test="user.status != null and user.status != ''">
@@ -96,6 +100,7 @@
           sens_user
       WHERE
           id NOT IN ( SELECT user_id FROM sens_rbac_user_role_ref )
+          AND t.del_flag = 0
   </select>
 
     <select id="getTodayCount" resultType="java.lang.Integer">
@@ -104,7 +109,8 @@
         FROM
             sens_post
         WHERE
-            to_days( create_time ) = to_days( now( ) );
+            to_days( create_time ) = to_days( now( ) )
+            AND t.del_flag = 0
     </select>
 
     <select id="getUserPostRanking" resultType="com.liuyanzhao.sens.entity.User">
@@ -121,6 +127,8 @@
             sens_user u
         WHERE
             p.user_id = u.id
+            AND p.del_flag = 0
+            AND u.del_flag = 0
         GROUP BY
             p.user_id
         ORDER BY
@@ -137,6 +145,8 @@
             create_time
         FROM
             sens_user
+        WHERE
+            del_flag = 0
         ORDER BY
             create_time DESC
             LIMIT #{value}

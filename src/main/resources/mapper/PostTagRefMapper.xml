@@ -12,6 +12,7 @@
           sens_post_tag_ref
       WHERE
           post_id = #{value}
+          AND del_flag = 0
   </delete>
 
   <delete id="deleteByTagId">
@@ -20,6 +21,7 @@
           sens_post_tag_ref
       WHERE
           tag_id = #{value}
+          AND del_flag = 0
   </delete>
 
   <select id="selectPostIdByTagId" resultType="java.lang.Long">
@@ -29,6 +31,7 @@
           sens_post_tag_ref
       WHERE
           tag_id = #{value}
+          AND del_flag = 0
   </select>
 
   <select id="selectTagIdByPostId" resultType="java.lang.Long">
@@ -38,5 +41,6 @@
           sens_post_tag_ref
       WHERE
           post_id = #{value}
+          AND del_flag = 0
   </select>
 </mapper>

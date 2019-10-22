@@ -121,16 +121,17 @@ public class PermissionServiceImpl implements PermissionService {
         permissionMapper.deleteById(id);
         rolePermissionRefMapper.deleteByPermissionId(id);
         // 删除所有的用户的权限列表缓存
-        redisUtil.delByKeys(RedisKeys.USER_PERMISSION_URLS + "*");
+        redisUtil.delByKeys(RedisKeys.USER_PERMISSION_URLS);
     }
 
     @Override
     public List<Permission> findPermissionListWithLevel(Integer resourceType) {
-        Map<String, Object> condition = new HashMap<>(1);
+        QueryWrapper queryWrapper = new QueryWrapper();
         if (resourceType != null) {
-            condition.put("resource_type", resourceType);
+            queryWrapper.eq("resource_type", resourceType);
+            queryWrapper.orderByDesc("sort");
         }
-        List<Permission> permissionList = permissionMapper.selectByMap(condition);
+        List<Permission> permissionList = permissionMapper.selectList(queryWrapper);
         return PermissionUtil.getPermissionList(permissionList);
 
     }

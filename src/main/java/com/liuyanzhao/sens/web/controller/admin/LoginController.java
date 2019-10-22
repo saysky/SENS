@@ -2,6 +2,7 @@ package com.liuyanzhao.sens.web.controller.admin;
 
 import cn.hutool.core.lang.Validator;
 import com.google.common.base.Strings;
+import com.liuyanzhao.sens.common.constant.RedisKeys;
 import com.liuyanzhao.sens.config.annotation.SystemLog;
 import com.liuyanzhao.sens.config.shiro.UserToken;
 import com.liuyanzhao.sens.entity.Role;
@@ -13,6 +14,7 @@ import com.liuyanzhao.sens.model.enums.*;
 import com.liuyanzhao.sens.service.*;
 import com.liuyanzhao.sens.utils.LocaleMessageUtil;
 import com.liuyanzhao.sens.utils.Md5Util;
+import com.liuyanzhao.sens.utils.RedisUtil;
 import com.liuyanzhao.sens.web.controller.common.BaseController;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -60,6 +62,9 @@ public class LoginController extends BaseController {
     @Autowired
     private MailService mailService;
 
+    @Autowired
+    private RedisUtil redisUtil;
+
     /**
      * 处理跳转到登录页的请求
      *
@@ -96,6 +101,8 @@ public class LoginController extends BaseController {
                 //登录成功，修改登录错误次数为0
                 User user = (User) subject.getPrincipal();
                 userService.updateUserLoginNormal(user);
+                //清除权限列表缓存，重新加载
+                redisUtil.del(RedisKeys.USER_PERMISSION_URLS + user.getId());
                 Set<String> permissionUrls = permissionService.findPermissionUrlsByUserId(user.getId());
                 subject.getSession().setAttribute("permissionUrls", permissionUrls);
                 return new JsonResult(ResultCodeEnum.SUCCESS.getCode(), localeMessageUtil.getMessage("code.admin.login.success"));

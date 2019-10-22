@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.liuyanzhao</groupId>
     <artifactId>sens</artifactId>
-    <version>latest</version>
+    <version>1.5.0</version>
     <name>sens</name>
 
     <!-- 开发不易，请勿私自开源 -->

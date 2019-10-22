@@ -105,15 +105,15 @@ public class CategoryController extends BaseController {
         if(!Objects.equals(category.getUserId(), userId)) {
             return new JsonResult(ResultCodeEnum.FAIL.getCode(), localeMessageUtil.getMessage("code.admin.common.permission-denied"));
         }
-        //2.判断这个分类有没有文章
-        Integer postCount = categoryService.countPostByCateId(cateId);
-        if (postCount != 0) {
-            return new JsonResult(ResultCodeEnum.FAIL.getCode(), localeMessageUtil.getMessage("code.admin.category.first-delete-child"));
-        }
+//        //2.判断这个分类有没有文章
+//        Integer postCount = categoryService.countPostByCateId(cateId);
+//        if (postCount != 0) {
+//            return new JsonResult(ResultCodeEnum.FAIL.getCode(), localeMessageUtil.getMessage("code.admin.category.first-delete-post"));
+//        }
         //3.判断这个分类有没有子分类
         Integer childCount = categoryService.selectChildCateId(cateId).size();
         if (childCount != 0) {
-            return new JsonResult(ResultCodeEnum.FAIL.getCode(), localeMessageUtil.getMessage("code.admin.category.first-delete-post"));
+            return new JsonResult(ResultCodeEnum.FAIL.getCode(), localeMessageUtil.getMessage("code.admin.category.first-delete-child"));
         }
         //4.do
         categoryService.delete(cateId);

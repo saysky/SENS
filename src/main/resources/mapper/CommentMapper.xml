@@ -26,6 +26,7 @@
         WHERE
             comment_status = 0
             AND is_admin = 0
+             AND del_flag = 0
         ORDER BY
             create_time DESC
             LIMIT #{limit}
@@ -37,6 +38,7 @@
            sens_comment
        WHERE
            user_id = #{value}
+            AND del_flag = 0
     </delete>
 
     <delete id="deleteByAcceptUserId">
@@ -45,6 +47,7 @@
            sens_comment
        WHERE
            accept_user_id = #{value}
+            AND del_flag = 0
     </delete>
 
     <select id="getLatestCommentByIP" resultType="com.liuyanzhao.sens.entity.Comment">
@@ -71,6 +74,7 @@
             sens_comment
         WHERE
             comment_author_ip = #{value}
+             AND del_flag = 0
         ORDER BY
             id DESC
             LIMIT 1
@@ -84,6 +88,7 @@
             sens_comment
         WHERE
             path_trace LIKE CONCAT('%',#{pathTrace},'%')
+             AND del_flag = 0
     </select>
 
     <select id="getTodayCount" resultType="java.lang.Integer">
@@ -92,7 +97,8 @@
         FROM
             sens_post
         WHERE
-            to_days( create_time ) = to_days( now( ) );
+            to_days( create_time ) = to_days( now( ) )
+             AND del_flag = 0
     </select>
 
     <select id="getLatestCommentByAcceptUser" resultType="com.liuyanzhao.sens.entity.Comment">
@@ -106,6 +112,7 @@
             sens_comment
         WHERE
             accept_user_id = #{userId}
+             AND del_flag = 0
         ORDER BY
             create_time DESC
             LIMIT #{limit}
@@ -117,5 +124,6 @@
         SET comment_status = #{status}
         WHERE
             id = #{id}
+             AND del_flag = 0
     </update>
 </mapper>
