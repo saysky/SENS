@@ -83,8 +83,8 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public List<Log> findLatestLogByUserId(Long userId, Integer limit) {
-        return logMapper.findLatestLogByUserId(userId, limit);
+    public List<Log> findLatestLogByUsername(String username, Integer limit) {
+        return logMapper.findLatestLogByUsername(username, limit);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.liuyanzhao.sens.web.controller.admin;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.common.base.Strings;
 import com.liuyanzhao.sens.config.annotation.SystemLog;
 import com.liuyanzhao.sens.entity.*;
 import com.liuyanzhao.sens.exception.SensBusinessException;
@@ -194,7 +195,12 @@ public class PostController extends BaseController {
         }
         //当没有选择文章缩略图的时候，自动分配一张内置的缩略图
         if (StringUtils.equals(post.getPostThumbnail(), BlogPropertiesEnum.DEFAULT_THUMBNAIL.getProp())) {
-            post.setPostThumbnail(SensConst.OPTIONS.get(BlogPropertiesEnum.BLOG_STATIC_URL.getProp()) + "/static/images/thumbnail/img_" + RandomUtil.randomInt(0, 14) + ".jpg");
+            String staticUrl = SensConst.OPTIONS.get(BlogPropertiesEnum.BLOG_STATIC_URL.getProp());
+            if (!Strings.isNullOrEmpty(staticUrl)) {
+                post.setPostThumbnail(staticUrl + "/static/images/thumbnail/img_" + RandomUtil.randomInt(0, 14) + ".jpg");
+            } else {
+                post.setPostThumbnail("/static/images/thumbnail/img_" + RandomUtil.randomInt(0, 14) + ".jpg");
+            }
         }
         post.setPostType(PostTypeEnum.POST_TYPE_POST.getValue());
         postService.insertOrUpdate(post);

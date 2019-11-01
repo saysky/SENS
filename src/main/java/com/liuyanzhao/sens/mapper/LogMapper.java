@@ -35,10 +35,10 @@ public interface LogMapper extends BaseMapper<Log> {
      * 根据用户ID获得最新日志
      *
      * @param limit
-     * @param userId
+     * @param username
      * @return List
      */
-    List<Log> findLatestLogByUserId(Long userId, Integer limit);
+    List<Log> findLatestLogByUsername(String username, Integer limit);
     /**
      * 删除所有的记录
      * @return 影响行数

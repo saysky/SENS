@@ -74,14 +74,14 @@ public class AdminController extends BaseController {
 
         model.addAttribute("createTime", user.getCreateTime());
 
-        //用户排行榜、最近注册用户，最新登录\注册\忘记密码日志
+        //用户排行榜、最近注册用户，最新日志
         model.addAttribute("userRanking", userService.getUserPostRanking(5));
         model.addAttribute("newUsers", userService.getLatestRegisterUser(8));
-        List<String> logTypes = new ArrayList<>();
-        logTypes.add(LogTypeEnum.LOGIN.getValue());
-        logTypes.add(LogTypeEnum.REGISTER.getValue());
-        logTypes.add(LogTypeEnum.FORGET.getValue());
-        model.addAttribute("logs", logService.findLatestLogByLogTypes(logTypes, 10));
+//        List<String> logTypes = new ArrayList<>();
+//        logTypes.add(LogTypeEnum.LOGIN.getValue());
+//        logTypes.add(LogTypeEnum.REGISTER.getValue());
+//        model.addAttribute("logs", logService.findLatestLogByLogTypes(logTypes, 10));
+        model.addAttribute("logs", logService.findLatestLogByUsername(user.getUserName(), 10));
         return "admin/admin_index";
     }
 

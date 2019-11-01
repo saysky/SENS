@@ -32,14 +32,14 @@ public interface LogService extends BaseService<Log, Long> {
      * @param limit
      * @return List
      */
-    List<Log> findLatestLogByLogTypes(List<String> logTypes, Integer limit);
+    List<Log> findLatestLogByLogTypes(List<String> logTypes,Integer limit);
     /**
      * 查询最新的日志
-     * @param userId
+     * @param username
      * @param limit
      * @return List
      */
-    List<Log> findLatestLogByUserId(Long userId, Integer limit);
+    List<Log> findLatestLogByUsername(String username, Integer limit);
 
     /**
      * 获得今日新增数量
