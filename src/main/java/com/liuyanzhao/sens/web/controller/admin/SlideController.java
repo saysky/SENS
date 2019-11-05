@@ -2,7 +2,9 @@ package com.liuyanzhao.sens.web.controller.admin;
 
 import com.liuyanzhao.sens.config.annotation.SystemLog;
 import com.liuyanzhao.sens.entity.Slide;
+import com.liuyanzhao.sens.model.dto.JsonResult;
 import com.liuyanzhao.sens.model.enums.LogTypeEnum;
+import com.liuyanzhao.sens.model.enums.ResultCodeEnum;
 import com.liuyanzhao.sens.model.enums.SlideTypeEnum;
 import com.liuyanzhao.sens.service.SlideService;
 import lombok.extern.slf4j.Slf4j;
@@ -79,11 +81,13 @@ public class SlideController {
      * @param slideId 幻灯片编号
      * @return 重定向到/admin/slide
      */
-    @GetMapping(value = "/delete")
+    @PostMapping(value = "/delete")
     @SystemLog(description = "删除幻灯片", type = LogTypeEnum.OPERATION)
-    public String removeSlide(@RequestParam("id") Long slideId) {
+    @ResponseBody
+    public JsonResult removeSlide(@RequestParam("id") Long slideId) {
         slideService.delete(slideId);
-        return "redirect:/admin/slide";
+        return new JsonResult(ResultCodeEnum.SUCCESS.getCode(), "删除成功");
+
     }
 
 }

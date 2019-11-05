@@ -1,6 +1,6 @@
 server:
   port: 8080
-  use-forward-headers: true
+  forward-headers-strategy: true
   undertow:
     io-threads: 2
     worker-threads: 36
@@ -15,8 +15,6 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     #MySql配置
-#    driver-class-name: com.mysql.jdbc.Driver
-#    url: jdbc:mysql://127.0.0.1:3306/sens_blog?characterEncoding=utf8&useSSL=false&allowMultiQueries=true
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/sens_blog_init?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false&allowMultiQueries=true
     username: root

@@ -99,7 +99,7 @@ public class PostServiceImpl implements PostService {
     @Override
     @Async
     public void updatePostView(Long postId) {
-        postMapper.incrPostLikes(postId);
+        postMapper.incrPostViews(postId);
     }
 
     @Override
