@@ -1,7 +1,8 @@
 最新消息，SpringCloud 博客、音乐、商城、论坛系统开发中，开源，[sens-parent](https://github.com/saysky/sens-parent) 
 # 关于项目
 该项目是基于SpringBoot2.x+Shiro+Redis+ElasticSearch实现的博客系统。<br/>
-项目在重构中，目标是后台采用Vue Element UI实现，提高用户体验，敬请期待。<br/>
+后台页面和部分功能借鉴并使用了 [Halo](https://github.com/halo-dev/halo)开源的早期版本代码 ，在此向其作者表示感谢！<br/>
+因博主精力有限，重构计划一拖再拖，但是目标还是要有的：未来计划将后台采用vuejs，前台界面重新选择更加清新的模板。
 预览地址：http://blog.liuyanzhao.com <br/>
 更新详细介绍：https://liuyanzhao.com/9354.html  <br/>
 
