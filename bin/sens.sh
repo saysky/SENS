@@ -7,7 +7,7 @@ usage() {
 }
 
 is_exist(){
-  pid=`ps -ef|grep $APP_NAME|grep -v grep|awk '{print $2}' `
+  pid=`ps -ef|grep APP_NAME|grep -v grep|awk '{printAPP_NAME|grep -v grep|awk '{print 2}' `
   if [ -z "${pid}" ]; then
    return 1
   else
@@ -18,7 +18,7 @@ is_exist(){
 start(){
   is_exist
   if [ $? -eq "0" ]; then
-    echo "${APP_NAME} 正在运行。 pid=${pid} ."
+    echo "APPNAME正在运行。pid={APP_NAME} 正在运行。 pid={pid} ."
   else
     nohup java -server -Xms1024m -Xmx1024m -Xmn340m -Xloggc:/www/wwwroot/sens-gc.log -jar $APP_NAME --server.port=80 > /dev/null 2>&1 &
 
@@ -39,7 +39,7 @@ stop(){
 status(){
   is_exist
   if [ $? -eq "0" ]; then
-    echo "${APP_NAME} 正在运行。Pid is ${pid}"
+    echo "APPNAME正在运行。Pidis{APP_NAME} 正在运行。Pid is {pid}"
   else
     echo "${APP_NAME} 没有运行。"
   fi
@@ -67,3 +67,4 @@ case "$1" in
     usage
     ;;
 esac
+
