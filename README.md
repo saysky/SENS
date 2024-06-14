@@ -1,5 +1,6 @@
 最新消息，博主已开通B站账号：[Java刘哥](https://space.bilibili.com/160340478)，欢迎关注，分享自己原创免费Java实战课程、各种框架实战和技巧、以及公司项目经验
 <hr/>
+
 最新轻量级SpringBoot+MyBatis+Thymeleaf博客系统  [初云博客-SpringBoot版本](https://github.com/saysky/ChuyunBlog)
 # 关于项目
 该项目是基于SpringBoot2.x+Shiro+Redis+ElasticSearch实现的博客系统。<br/>
