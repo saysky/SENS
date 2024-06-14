@@ -36,4 +36,3 @@ public abstract class DefaultAuthServiceImpl implements AuthService {
         restTemplate.setRequestFactory(requestFactory);
         return restTemplate;
     }
-}

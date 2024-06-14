@@ -22,4 +22,3 @@ cd $SENS_DIR/target
 # 运行SENS
 sh $SENS_DIR/bin/sens.sh start
 
-echo "SENS部署完毕，Enjoy！"

@@ -126,4 +126,3 @@
             id = #{id}
              AND del_flag = 0
     </update>
-</mapper>

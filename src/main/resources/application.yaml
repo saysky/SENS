@@ -103,4 +103,3 @@ ignored:
     - /admin/register
     - /admin/getRegister
     - /admin/forget
-    - /admin/getForget

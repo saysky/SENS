@@ -65,4 +65,3 @@ public class URLPathMatchingFilter extends PathMatchingFilter {
                 && "XMLHttpRequest"
                 .equals(httpRequest.getHeader("X-Requested-With").toString()));
     }
-}

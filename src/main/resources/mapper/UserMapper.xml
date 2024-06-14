@@ -151,4 +151,3 @@
             create_time DESC
             LIMIT #{value}
     </select>
-</mapper>

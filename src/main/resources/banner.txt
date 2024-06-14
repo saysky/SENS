@@ -11,4 +11,3 @@ ${AnsiColor.BRIGHT_CYAN}
 
 
  ${AnsiColor.BRIGHT_YELLOW}
- ::: Spring-Boot ${spring-boot.version}     ::: SENS Blog (version:${application.formatted-version})

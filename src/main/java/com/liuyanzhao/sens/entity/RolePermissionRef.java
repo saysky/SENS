@@ -27,4 +27,3 @@ public class RolePermissionRef  extends BaseEntity {
         this.roleId = roleId;
         this.permissionId = permissionId;
     }
-}

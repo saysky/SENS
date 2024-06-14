@@ -31,4 +31,3 @@ public class RolePermissionRefServiceImpl implements RolePermissionRefService {
     public void batchSaveByRolePermissionRef(List<RolePermissionRef> rolePermissionRefs) {
         rolePermissionRefMapper.batchInsert(rolePermissionRefs);
     }
-}

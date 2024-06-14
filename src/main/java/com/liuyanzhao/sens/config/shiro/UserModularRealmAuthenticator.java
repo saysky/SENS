@@ -47,4 +47,3 @@ public class UserModularRealmAuthenticator extends ModularRealmAuthenticator {
             return doMultiRealmAuthentication(typeRealms, userToken);
         }
     }
-}

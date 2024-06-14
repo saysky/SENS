@@ -12,4 +12,3 @@
           option_name = #{optionName}
           AND del_flag = 0
   </select>
-</mapper>

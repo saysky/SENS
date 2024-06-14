@@ -172,4 +172,3 @@ public class FrontOAuthController extends BaseController {
         return "redirect:/admin/login";
     }
 
-}

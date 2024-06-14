@@ -37,4 +37,3 @@ public class MailRetrieve extends BaseEntity  {
     private Date outTime;
 
 
-}

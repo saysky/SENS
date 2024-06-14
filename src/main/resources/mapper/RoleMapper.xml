@@ -58,4 +58,3 @@
             r.role_id
             order by t.level ASC
     </select>
-</mapper>

@@ -424,4 +424,3 @@
         ORDER BY
             t.create_time DESC
     </select>
-</mapper>

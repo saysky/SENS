@@ -135,4 +135,3 @@ public class MenuServiceImpl implements MenuService {
             redisUtil.del(RedisKeys.FRONT_MENU + menu.getMenuType());
         }
     }
-}

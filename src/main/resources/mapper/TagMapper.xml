@@ -101,4 +101,3 @@
             LIMIT #{limit}
     </select>
 
-</mapper>

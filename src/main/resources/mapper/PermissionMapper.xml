@@ -84,4 +84,3 @@
             AND rp.del_flag = 0
         ORDER BY p.sort ASC
     </select>
-</mapper>
